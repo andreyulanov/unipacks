@@ -12,15 +12,14 @@ class QGeoMapReplyBingmaps: public QGeoTiledMapReply
 {
   Q_OBJECT
 
+  KRender*      m_render;
+  KRender::Tile curr_tile;
+
 public:
   QGeoMapReplyBingmaps(KRender* render, const QGeoTileSpec& spec,
                        QObject* parent = 0);
-
-private Q_SLOTS:
-  void renderFinished(QPixmap);
-
-private:
-  KRender* m_render;
+  void renderedTile(QPixmap, int x, int y, int z);
+  void setBusy();
 };
 
 QT_END_NAMESPACE

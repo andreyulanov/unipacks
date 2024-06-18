@@ -18,7 +18,8 @@ class QGeoTileFetcherBingmaps: public QGeoTileFetcher
   Q_OBJECT
 
 public:
-  QGeoTileFetcherBingmaps(const QVariantMap&,
+  QGeoTileFetcherBingmaps(
+      const QVariantMap&,
       QGeoTiledMappingManagerEngineBingmaps* engine,
       const QSize&                           tileSize);
 
@@ -35,7 +36,8 @@ private:
   QString    _language;
 
   // Bing version strings
-  QString _versionBingMaps;
+  QString  _versionBingMaps;
+  KRender* render = nullptr;
 };
 
 QT_END_NAMESPACE

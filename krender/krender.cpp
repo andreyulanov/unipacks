@@ -39,6 +39,7 @@ KRender::KRender(Settings v)
   setPixelSizeMM(v.pixel_size_mm);
   setMaxLoadedMapsCount(v.max_loaded_maps_count);
   setPixmapSize(v.window_size);
+  qRegisterMetaType<KRender::Tile>();
 }
 
 KRender::~KRender()
@@ -54,20 +55,26 @@ void KRender::addPack(QString path, bool load_now)
   insertPack(packs.count(), path, load_now);
 }
 
-void KRender::requestTile(int tile_size, int tile_idx_x,
-                          int tile_idx_y, int zoom)
+void KRender::requestTile(Tile t)
 {
+  if (isRunning())
+  {
+    busy();
+    return;
+  }
+
   qDebug() << Q_FUNC_INFO;
-  int tile_num        = pow(2, zoom);
-  int world_width_pix = tile_size * tile_num;
+  int tile_num        = pow(2, t.z);
+  int world_width_pix = 256 * tile_num;
   mip                 = 1;
   mip                 = 2 * M_PI * kmath::earth_r / world_width_pix;
-  center_m = {(tile_idx_x - tile_num / 2 + 0.5) * tile_size * mip,
-              (tile_idx_y - tile_num / 2 + 0.5) * tile_size * mip};
+  center_m            = {(t.x - tile_num / 2 + 0.5) * 256 * mip,
+                         (t.y - tile_num / 2 + 0.5) * 256 * mip};
+  curr_tile           = t;
 
-  qDebug() << "tile_idx_x" << tile_idx_x;
-  qDebug() << "tile_idx_y" << tile_idx_y;
-  qDebug() << "zoom" << zoom;
+  qDebug() << "tile.x" << t.x;
+  qDebug() << "tile.y" << t.y;
+  qDebug() << "zoom" << t.z;
   qDebug() << "mip" << mip;
 
   render();
@@ -1064,7 +1071,7 @@ void KRender::run()
   emit rendered(0);
   if (loading_enabled)
     checkLoad();
-  finished(render_pixmap);
+  renderedTile(render_pixmap, curr_tile.x, curr_tile.y, curr_tile.z);
 }
 
 void KRender::renderUserObjects()

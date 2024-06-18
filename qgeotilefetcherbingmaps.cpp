@@ -31,14 +31,17 @@ QGeoTileFetcherBingmaps::getTileImage(const QGeoTileSpec& spec)
   KRender::Settings s;
   s.pixel_size_mm = 0.1;
   s.window_size   = m_tileSize;
-  KRender* render = new KRender(s);
-  render->addPack("/home/user/unipacks/data/packs/world.kpack", true);
-  render->addPack(
-      "/home/user/unipacks/data/packs/ru-spe,ru-len.kpack", false);
-  render->requestTile(m_tileSize.width(), spec.x(), spec.y(),
-                      spec.zoom());
+  if (!render)
+  {
+    render = new KRender(s);
+    render->addPack("/home/user/unipacks/data/packs/world.kpack",
+                    true);
+    render->addPack(
+        "/home/user/unipacks/data/packs/ru-spe,ru-len.kpack", false);
+  }
   QGeoTiledMapReply* mapReply =
       new QGeoMapReplyBingmaps(render, spec);
+  render->requestTile({spec.x(), spec.y(), spec.zoom()});
 
   return mapReply;
 }

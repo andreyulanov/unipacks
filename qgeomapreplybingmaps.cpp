@@ -12,12 +12,27 @@ QGeoMapReplyBingmaps::QGeoMapReplyBingmaps(KRender*            render,
     QGeoTiledMapReply(spec, parent),
     m_render(render)
 {
-  connect(m_render, SIGNAL(finished(QPixmap)), this,
-          SLOT(renderFinished(QPixmap)), Qt::UniqueConnection);
+  connect(m_render, &KRender::renderedTile, this,
+          &QGeoMapReplyBingmaps::renderedTile, Qt::UniqueConnection);
+  connect(m_render, &KRender::busy, this,
+          &QGeoMapReplyBingmaps::setBusy, Qt::UniqueConnection);
+  curr_tile.x = spec.x();
+  curr_tile.y = spec.y();
+  curr_tile.z = spec.zoom();
 }
 
-void QGeoMapReplyBingmaps::renderFinished(QPixmap pm)
+void QGeoMapReplyBingmaps::setBusy()
 {
+  //  qDebug() << Q_FUNC_INFO;
+  //  setFinished(false);
+}
+
+void QGeoMapReplyBingmaps::renderedTile(QPixmap pm, int x, int y,
+                                        int z)
+{
+  if (curr_tile.x != x || curr_tile.y != y || curr_tile.z != z)
+    return;
+
   qDebug() << Q_FUNC_INFO;
 
   QByteArray ba;

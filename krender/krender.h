@@ -19,6 +19,10 @@ public:
     QColor background_color      = QColor(150, 210, 240);
     double max_loaded_maps_count = 3;
   };
+  struct Tile
+  {
+    int x, y, z;
+  };
 
 private:
   struct DrawTextEntry
@@ -85,6 +89,8 @@ private:
   QRectF                 render_frame_m;
   QElapsedTimer          yield_timer;
 
+  Tile curr_tile;
+
   void run();
   void start() = delete;
   void insertPack(int idx, QString path, bool load_now);
@@ -127,14 +133,15 @@ signals:
   void started(QRectF);
   void paintUserObjects(QPainter* p);
   void rendered(int ms_elapsed);
-  void finished(QPixmap);
+  void renderedTile(QPixmap, int x, int y, int z);
+  void busy();
 
 public:
   KRender(Settings);
   virtual ~KRender();
   void addPack(QString path, bool load_now);
 
-  void         requestTile(int tile_size, int x, int y, int z);
+  void         requestTile(Tile);
   const KPack* getPack(int idx) const;
 
   void setBackgroundColor(QColor);
@@ -172,5 +179,6 @@ public:
   void pan(QPoint);
   void zoom(double);
 };
+Q_DECLARE_METATYPE(KRender::Tile)
 
 #endif  // KRENDER_H

@@ -19,7 +19,6 @@ public:
   QGeoMapReplyBingmaps(KRender* render, const QGeoTileSpec& spec,
                        QObject* parent = 0);
   void renderedTile(QPixmap, int x, int y, int z);
-  void setBusy();
 };
 
 QT_END_NAMESPACE

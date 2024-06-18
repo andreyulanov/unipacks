@@ -40,6 +40,8 @@ KRender::KRender(Settings v)
   setMaxLoadedMapsCount(v.max_loaded_maps_count);
   setPixmapSize(v.window_size);
   qRegisterMetaType<KRender::Tile>();
+  connect(this, &KRender::renderedTile, this,
+          &KRender::onRenderedTile);
 }
 
 KRender::~KRender()
@@ -55,14 +57,18 @@ void KRender::addPack(QString path, bool load_now)
   insertPack(packs.count(), path, load_now);
 }
 
+void KRender::onRenderedTile(QPixmap, int x, int y, int z)
+{
+  wait();
+  if (!pending_tiles.isEmpty())
+  {
+    requestTile(pending_tiles.first());
+    pending_tiles.removeFirst();
+  }
+}
+
 void KRender::requestTile(Tile t)
 {
-  if (isRunning())
-  {
-    busy();
-    return;
-  }
-
   qDebug() << Q_FUNC_INFO;
   int tile_num        = pow(2, t.z);
   int world_width_pix = 256 * tile_num;
@@ -1093,7 +1099,11 @@ void KRender::renderUserObjects()
 void KRender::render()
 {
   if (isRunning())
+  {
+    qDebug() << "added tile to pending list-------------";
+    pending_tiles.append(curr_tile);
     return;
+  }
   rendering_enabled = true;
   if (QThreadPool::globalInstance()->activeThreadCount() == 0)
     checkUnload();

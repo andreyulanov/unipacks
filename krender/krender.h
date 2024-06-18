@@ -89,7 +89,8 @@ private:
   QRectF                 render_frame_m;
   QElapsedTimer          yield_timer;
 
-  Tile curr_tile;
+  Tile          curr_tile;
+  QVector<Tile> pending_tiles;
 
   void run();
   void start() = delete;
@@ -134,7 +135,6 @@ signals:
   void paintUserObjects(QPainter* p);
   void rendered(int ms_elapsed);
   void renderedTile(QPixmap, int x, int y, int z);
-  void busy();
 
 public:
   KRender(Settings);
@@ -142,6 +142,7 @@ public:
   void addPack(QString path, bool load_now);
 
   void         requestTile(Tile);
+  void         onRenderedTile(QPixmap, int x, int y, int z);
   const KPack* getPack(int idx) const;
 
   void setBackgroundColor(QColor);

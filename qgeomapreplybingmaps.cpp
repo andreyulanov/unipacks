@@ -14,17 +14,9 @@ QGeoMapReplyBingmaps::QGeoMapReplyBingmaps(KRender*            render,
 {
   connect(m_render, &KRender::renderedTile, this,
           &QGeoMapReplyBingmaps::renderedTile, Qt::UniqueConnection);
-  connect(m_render, &KRender::busy, this,
-          &QGeoMapReplyBingmaps::setBusy, Qt::UniqueConnection);
   curr_tile.x = spec.x();
   curr_tile.y = spec.y();
   curr_tile.z = spec.zoom();
-}
-
-void QGeoMapReplyBingmaps::setBusy()
-{
-  //  qDebug() << Q_FUNC_INFO;
-  //  setFinished(false);
 }
 
 void QGeoMapReplyBingmaps::renderedTile(QPixmap pm, int x, int y,

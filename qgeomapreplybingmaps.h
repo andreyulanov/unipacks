@@ -1,7 +1,6 @@
 #ifndef QGEOMAPREPLYBINGMAPS_H
 #define QGEOMAPREPLYBINGMAPS_H
 
-#include <QtNetwork/QNetworkReply>
 #include <QtLocation/private/qgeotilespec_p.h>
 #include <QtLocation/private/qgeotiledmapreply_p.h>
 #include <QtCore/QPointer>

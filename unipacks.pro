@@ -1,5 +1,5 @@
 TARGET = qtgeoservices_bingmaps
-QT += location-private network
+QT += location-private
 CONFIG += c++2a
 
 PLUGIN_TYPE = geoservices

@@ -2,6 +2,7 @@
 #include <QNetworkAccessManager>
 #include <QNetworkCacheMetaData>
 #include <QDateTime>
+#include <QBuffer>
 
 QT_BEGIN_NAMESPACE
 
@@ -18,13 +19,12 @@ QGeoMapReplyBingmaps::QGeoMapReplyBingmaps(KRender*            render,
 void QGeoMapReplyBingmaps::renderFinished(QPixmap pm)
 {
   qDebug() << Q_FUNC_INFO;
-  pm.save("/tmp/ktile.png");
-  QFile      f("/tmp/ktile.png");
+
   QByteArray ba;
-  if (f.open(QIODevice::ReadOnly))
-    ba = f.readAll();
+  QBuffer    buffer(&ba);
+  buffer.open(QIODevice::WriteOnly);
+  pm.save(&buffer, "bmp");
   setMapImageData(ba);
-  setMapImageFormat("png");
   setFinished(true);
 }
 

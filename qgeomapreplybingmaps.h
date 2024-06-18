@@ -14,22 +14,14 @@ class QGeoMapReplyBingmaps: public QGeoTiledMapReply
   Q_OBJECT
 
 public:
-  QGeoMapReplyBingmaps(QNetworkReply* reply, KRender* render,
-                       const QGeoTileSpec& spec, QObject* parent = 0);
-  ~QGeoMapReplyBingmaps();
-
-  void abort();
-
-  QNetworkReply* networkReply() const;
+  QGeoMapReplyBingmaps(KRender* render, const QGeoTileSpec& spec,
+                       QObject* parent = 0);
 
 private Q_SLOTS:
-  void networkFinished();
-  void networkError(QNetworkReply::NetworkError error);
   void renderFinished(QPixmap);
 
 private:
-  QPointer<QNetworkReply> m_reply;
-  QPointer<KRender>       m_render;
+  KRender* m_render;
 };
 
 QT_END_NAMESPACE

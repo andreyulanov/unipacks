@@ -95,8 +95,6 @@ QGeoTileFetcherBingmaps::getTileImage(const QGeoTileSpec& spec)
 
   netRequest.setUrl(url);
 
-  QNetworkReply* netReply = m_networkManager->get(netRequest);
-
   qDebug() << Q_FUNC_INFO << "m_tileSize" << m_tileSize;
   qDebug() << Q_FUNC_INFO << "spec" << spec;
 
@@ -110,7 +108,7 @@ QGeoTileFetcherBingmaps::getTileImage(const QGeoTileSpec& spec)
   render->requestTile(m_tileSize.width(), spec.x(), spec.y(),
                       spec.zoom());
   QGeoTiledMapReply* mapReply =
-      new QGeoMapReplyBingmaps(netReply, render, spec);
+      new QGeoMapReplyBingmaps(render, spec);
 
   return mapReply;
 }

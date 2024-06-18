@@ -16,7 +16,7 @@ Window {
     Map {
         anchors.fill: parent
         plugin: mapPlugin
-        center: QtPositioning.coordinate(60, 30)
-        zoomLevel: 3
+        center: QtPositioning.coordinate(59.9769195, 30.3642851)
+        zoomLevel: 17
     }
 }
